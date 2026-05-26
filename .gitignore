@@ -1,0 +1,34 @@
+# Backend
+backend/target/
+backend/.classpath
+backend/.project
+backend/.settings/
+backend/*.log
+backend/.env
+backend/.env.local
+backend/application-*.properties
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+frontend/.env
+frontend/.env.local
+frontend/*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+*.iml
+*.DS_Store
+
+# OS
+.DS_Store
+Thumbs.db
+
+# General
+*.zip
+*.tar.gz
