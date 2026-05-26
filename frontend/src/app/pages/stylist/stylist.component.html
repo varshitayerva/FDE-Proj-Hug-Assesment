@@ -1,0 +1,221 @@
+<div class="stylist-container">
+  <div class="stylist-header">
+    <h1>Get Personalized Styling Recommendations</h1>
+    <p>Answer a few questions about your style preferences and get AI-powered outfit recommendations</p>
+  </div>
+
+  <div *ngIf="error" class="error-message">{{ error }}</div>
+  <div *ngIf="success" class="success-message">✓ Recommendations generated successfully!</div>
+
+  <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="stylist-form">
+    <div class="form-section">
+      <h2>Personal Information</h2>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="gender">Gender</label>
+          <select id="gender" class="form-control" formControlName="gender" [class.is-invalid]="submitted && f['gender'].errors">
+            <option value="">-- Select --</option>
+            <option *ngFor="let opt of genderOptions" [value]="opt">{{ formatLabel(opt) }}</option>
+          </select>
+          <div *ngIf="submitted && f['gender'].errors" class="invalid-feedback">Required</div>
+        </div>
+
+        <div class="form-group">
+          <label for="ageGroup">Age Group</label>
+          <select id="ageGroup" class="form-control" formControlName="ageGroup" [class.is-invalid]="submitted && f['ageGroup'].errors">
+            <option value="">-- Select --</option>
+            <option *ngFor="let opt of ageGroupOptions" [value]="opt">{{ formatLabel(opt) }}</option>
+          </select>
+          <div *ngIf="submitted && f['ageGroup'].errors" class="invalid-feedback">Required</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2>Body & Style</h2>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="bodyType">Body Type</label>
+          <select id="bodyType" class="form-control" formControlName="bodyType" [class.is-invalid]="submitted && f['bodyType'].errors">
+            <option value="">-- Select --</option>
+            <option *ngFor="let opt of bodyTypeOptions" [value]="opt">{{ formatLabel(opt) }}</option>
+          </select>
+          <div *ngIf="submitted && f['bodyType'].errors" class="invalid-feedback">Required</div>
+        </div>
+
+        <div class="form-group">
+          <label for="skinTone">Skin Tone</label>
+          <select id="skinTone" class="form-control" formControlName="skinTone" [class.is-invalid]="submitted && f['skinTone'].errors">
+            <option value="">-- Select --</option>
+            <option *ngFor="let opt of skinToneOptions" [value]="opt">{{ formatLabel(opt) }}</option>
+          </select>
+          <div *ngIf="submitted && f['skinTone'].errors" class="invalid-feedback">Required</div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="stylePreference">Style Preference</label>
+          <select id="stylePreference" class="form-control" formControlName="stylePreference" [class.is-invalid]="submitted && f['stylePreference'].errors">
+            <option value="">-- Select --</option>
+            <option *ngFor="let opt of styleOptions" [value]="opt">{{ formatLabel(opt) }}</option>
+          </select>
+          <div *ngIf="submitted && f['stylePreference'].errors" class="invalid-feedback">Required</div>
+        </div>
+
+        <div class="form-group">
+          <label for="fitPreference">Fit Preference</label>
+          <select id="fitPreference" class="form-control" formControlName="fitPreference" [class.is-invalid]="submitted && f['fitPreference'].errors">
+            <option value="">-- Select --</option>
+            <option *ngFor="let opt of fitOptions" [value]="opt">{{ formatLabel(opt) }}</option>
+          </select>
+          <div *ngIf="submitted && f['fitPreference'].errors" class="invalid-feedback">Required</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2>Preferences & Occasion</h2>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="budgetRange">Budget Range</label>
+          <select id="budgetRange" class="form-control" formControlName="budgetRange" [class.is-invalid]="submitted && f['budgetRange'].errors">
+            <option value="">-- Select --</option>
+            <option *ngFor="let opt of budgetOptions" [value]="opt">{{ formatLabel(opt) }}</option>
+          </select>
+          <div *ngIf="submitted && f['budgetRange'].errors" class="invalid-feedback">Required</div>
+        </div>
+
+        <div class="form-group">
+          <label for="occasionType">Occasion Type</label>
+          <select id="occasionType" class="form-control" formControlName="occasionType" [class.is-invalid]="submitted && f['occasionType'].errors">
+            <option value="">-- Select --</option>
+            <option *ngFor="let opt of occasionOptions" [value]="opt">{{ formatLabel(opt) }}</option>
+          </select>
+          <div *ngIf="submitted && f['occasionType'].errors" class="invalid-feedback">Required</div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="weather">Weather Condition</label>
+          <select id="weather" class="form-control" formControlName="weather" [class.is-invalid]="submitted && f['weather'].errors">
+            <option value="">-- Select --</option>
+            <option *ngFor="let opt of weatherOptions" [value]="opt">{{ formatLabel(opt) }}</option>
+          </select>
+          <div *ngIf="submitted && f['weather'].errors" class="invalid-feedback">Required</div>
+        </div>
+
+        <div class="form-group">
+          <label for="confidenceLevel">Fashion Confidence Level</label>
+          <select id="confidenceLevel" class="form-control" formControlName="confidenceLevel" [class.is-invalid]="submitted && f['confidenceLevel'].errors">
+            <option value="">-- Select --</option>
+            <option *ngFor="let opt of confidenceOptions" [value]="opt">{{ formatLabel(opt) }}</option>
+          </select>
+          <div *ngIf="submitted && f['confidenceLevel'].errors" class="invalid-feedback">Required</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2>Additional Information</h2>
+      <div class="form-group">
+        <label for="preferredColors">Preferred Colors (comma-separated)</label>
+        <input
+          type="text"
+          id="preferredColors"
+          class="form-control"
+          formControlName="preferredColors"
+          [class.is-invalid]="submitted && f['preferredColors'].errors"
+          placeholder="e.g., Blue, White, Earth Tones"
+        />
+        <div *ngIf="submitted && f['preferredColors'].errors" class="invalid-feedback">Required</div>
+      </div>
+
+      <div class="form-group">
+        <label for="favoriteBrands">Favorite Brands (comma-separated)</label>
+        <input
+          type="text"
+          id="favoriteBrands"
+          class="form-control"
+          formControlName="favoriteBrands"
+          placeholder="e.g., Zara, H&M, Nike (optional)"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="wardrobePreferences">Wardrobe Preferences</label>
+        <textarea
+          id="wardrobePreferences"
+          class="form-control"
+          formControlName="wardrobePreferences"
+          rows="3"
+          placeholder="Any additional style notes or preferences (optional)"
+        ></textarea>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary" [disabled]="loading">
+      {{ loading ? 'Generating Recommendations...' : 'Get Styling Recommendations' }}
+    </button>
+  </form>
+
+  <div *ngIf="recommendation" class="results-section" id="results">
+    <h2>Your Styling Recommendations</h2>
+
+    <div class="analysis-section">
+      <h3>Style Analysis</h3>
+      <div class="analysis-grid">
+        <div class="analysis-item">
+          <label>Fashion Persona</label>
+          <p>{{ recommendation.styleAnalysis.fashionPersona }}</p>
+        </div>
+        <div class="analysis-item">
+          <label>Body Fit Recommendation</label>
+          <p>{{ recommendation.styleAnalysis.bodyFitRecommendation }}</p>
+        </div>
+        <div class="analysis-item">
+          <label>Suitable Colors</label>
+          <div class="color-list">
+            <span *ngFor="let color of recommendation.styleAnalysis.suitableColors" class="color-tag">{{ color }}</span>
+          </div>
+        </div>
+        <div class="analysis-item">
+          <label>Style Match Score</label>
+          <div class="score-bar">
+            <div class="score-fill" [style.width.%]="recommendation.styleAnalysis.styleMatchScore"></div>
+            <span class="score-text">{{ recommendation.styleAnalysis.styleMatchScore }}%</span>
+          </div>
+        </div>
+        <div class="analysis-item">
+          <label>Confidence Score</label>
+          <div class="score-bar">
+            <div class="score-fill" [style.width.%]="recommendation.styleAnalysis.confidenceScore"></div>
+            <span class="score-text">{{ recommendation.styleAnalysis.confidenceScore }}%</span>
+          </div>
+        </div>
+        <div class="analysis-item">
+          <label>Recommended Categories</label>
+          <div class="category-list">
+            <span *ngFor="let cat of recommendation.styleAnalysis.recommendedCategories" class="category-tag">{{ cat }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="recommendations-section">
+      <h3>Outfit Recommendations</h3>
+      <div class="recommendations-text">{{ recommendation.outfitRecommendations }}</div>
+    </div>
+
+    <div *ngIf="recommendation.summaryReport" class="summary-section">
+      <h3>Summary Report</h3>
+      <div class="summary-text">{{ recommendation.summaryReport }}</div>
+    </div>
+
+    <div class="info-footer">
+      <p><strong>Advanced Recommendation:</strong> {{ recommendation.isAdvancedRecommendation ? 'Yes (Expert Level)' : 'No (Beginner Friendly)' }}</p>
+      <p><strong>AI Calls Used:</strong> {{ recommendation.numberOfLlmCalls }} / 3</p>
+    </div>
+  </div>
+</div>

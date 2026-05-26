@@ -1,0 +1,62 @@
+<div class="dashboard-container">
+  <div class="welcome-section">
+    <h1>Welcome, {{ currentUser?.firstName }}! 👗</h1>
+    <p class="welcome-text">Discover your perfect style with AI-powered recommendations</p>
+  </div>
+
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🎯</div>
+      <h2>Get Personalized Recommendations</h2>
+      <p>Answer a few questions about your style, body type, and preferences to get AI-powered outfit recommendations tailored just for you.</p>
+      <button class="btn btn-primary" (click)="navigateToStyler()">Get Started</button>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">📋</div>
+      <h2>View My Recommendations</h2>
+      <p>Browse all your previous styling recommendations, compare different styles, and discover new outfit combinations whenever you need inspiration.</p>
+      <button class="btn btn-secondary" (click)="navigateToRecommendations()">View Recommendations</button>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">✨</div>
+      <h2>AI-Powered Insights</h2>
+      <p>Our advanced AI analyzes your body type, skin tone, and preferences to provide expert-level styling advice that boosts your fashion confidence.</p>
+      <button class="btn btn-secondary" disabled>Coming Soon</button>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">💎</div>
+      <h2>Premium Features</h2>
+      <p>Access exclusive features including wardrobe inventory management, virtual try-on, and shopping recommendations from your favorite brands.</p>
+      <button class="btn btn-secondary" disabled>Coming Soon</button>
+    </div>
+  </div>
+
+  <div class="info-section">
+    <h2>How It Works</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-number">1</div>
+        <h3>Complete Your Profile</h3>
+        <p>Tell us about your style preferences, body type, skin tone, and other details</p>
+      </div>
+      <div class="step">
+        <div class="step-number">2</div>
+        <h3>AI Analysis</h3>
+        <p>Our AI analyzes your information to create your unique fashion persona</p>
+      </div>
+      <div class="step">
+        <div class="step-number">3</div>
+        <h3>Get Recommendations</h3>
+        <p>Receive personalized outfit recommendations with styling tips and explanations</p>
+      </div>
+      <div class="step">
+        <div class="step-number">4</div>
+        <h3>Save & Explore</h3>
+        <p>Save your favorite recommendations and explore new styles anytime</p>
+      </div>
+    </div>
+  </div>
+</div>

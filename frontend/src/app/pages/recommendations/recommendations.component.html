@@ -1,0 +1,36 @@
+<div class="recommendations-container">
+  <div class="recommendations-header">
+    <h1>My Styling Recommendations</h1>
+    <p>View all your previous styling recommendations</p>
+  </div>
+
+  <div *ngIf="error" class="error-message">{{ error }}</div>
+
+  <div *ngIf="loading" class="loading">Loading recommendations...</div>
+
+  <div *ngIf="!loading && recommendations.length === 0" class="empty-state">
+    <p>No recommendations yet. Start by getting your first styling recommendation!</p>
+    <a routerLink="/stylist" class="btn btn-primary">Get Started</a>
+  </div>
+
+  <div *ngIf="!loading && recommendations.length > 0" class="recommendations-grid">
+    <div *ngFor="let rec of recommendations" class="recommendation-card" (click)="viewRecommendation(rec.id)">
+      <div class="card-header">
+        <h3>Recommendation #{{ rec.id }}</h3>
+        <span class="date">{{ formatDate(rec.createdAt) }}</span>
+      </div>
+      <div class="card-body">
+        <div class="score-info">
+          <span class="score-badge">Style: {{ rec.styleMatchScore }}%</span>
+          <span class="score-badge">Confidence: {{ rec.confidenceScore }}%</span>
+        </div>
+        <p class="level-indicator">
+          {{ rec.isAdvancedRecommendation ? '⭐ Advanced Level' : '📚 Beginner Friendly' }}
+        </p>
+      </div>
+      <div class="card-footer">
+        <button class="btn btn-small">View Details →</button>
+      </div>
+    </div>
+  </div>
+</div>

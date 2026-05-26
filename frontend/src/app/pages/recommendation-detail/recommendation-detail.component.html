@@ -1,0 +1,70 @@
+<div class="detail-container">
+  <div class="detail-header">
+    <button class="back-btn" (click)="goBack()">← Back to Recommendations</button>
+    <h1>Recommendation Details</h1>
+  </div>
+
+  <div *ngIf="error" class="error-message">{{ error }}</div>
+
+  <div *ngIf="loading" class="loading">Loading recommendation...</div>
+
+  <div *ngIf="!loading && recommendation" class="detail-content">
+    <div class="detail-card">
+      <div class="card-section">
+        <h2>Recommendation Information</h2>
+        <div class="info-grid">
+          <div class="info-item">
+            <label>Recommendation ID</label>
+            <p>#{{ recommendation.id }}</p>
+          </div>
+          <div class="info-item">
+            <label>Generated On</label>
+            <p>{{ formatDate(recommendation.createdAt) }}</p>
+          </div>
+          <div class="info-item">
+            <label>Style Match Score</label>
+            <div class="score-bar">
+              <div class="score-fill" [style.width.%]="recommendation.styleMatchScore"></div>
+              <span class="score-text">{{ recommendation.styleMatchScore }}%</span>
+            </div>
+          </div>
+          <div class="info-item">
+            <label>Confidence Score</label>
+            <div class="score-bar">
+              <div class="score-fill" [style.width.%]="recommendation.confidenceScore"></div>
+              <span class="score-text">{{ recommendation.confidenceScore }}%</span>
+            </div>
+          </div>
+          <div class="info-item">
+            <label>Recommendation Level</label>
+            <p>{{ recommendation.isAdvancedRecommendation ? '⭐ Advanced' : '📚 Beginner Friendly' }}</p>
+          </div>
+          <div class="info-item">
+            <label>AI Calls Used</label>
+            <p>{{ recommendation.numberOfLlmCalls }} / 3</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-section">
+        <h2>Style Analysis</h2>
+        <div class="analysis-text">{{ recommendation.styleAnalysis }}</div>
+      </div>
+
+      <div class="card-section">
+        <h2>Outfit Recommendations</h2>
+        <div class="recommendations-text">{{ recommendation.outfitRecommendations }}</div>
+      </div>
+
+      <div class="card-section">
+        <h2>Summary Report</h2>
+        <div class="summary-text">{{ recommendation.summaryReport }}</div>
+      </div>
+    </div>
+
+    <div class="action-buttons">
+      <button class="btn btn-primary" (click)="goBack()">Back</button>
+      <button class="btn btn-secondary" (click)="loadRecommendation()">Refresh</button>
+    </div>
+  </div>
+</div>
