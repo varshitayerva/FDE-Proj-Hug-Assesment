@@ -62,30 +62,23 @@ public class AuthService {
     }
 
     public AuthResponse login(AuthRequest request) {
-        try {
-            Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                    request.getEmail(),
-                    request.getPassword()
-                )
-            );
+        User user = userRepository.findByEmail(request.getEmail())
+            .orElseThrow(() -> new BadRequestException("Invalid email or password"));
 
-            User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-
-            String token = jwtTokenProvider.generateToken(authentication);
-
-            return AuthResponse.builder()
-                .token(token)
-                .userId(user.getId())
-                .email(user.getEmail())
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .role(user.getRole().name())
-                .message("Login successful")
-                .build();
-        } catch (Exception ex) {
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new BadRequestException("Invalid email or password");
         }
+
+        String token = jwtTokenProvider.generateTokenFromEmail(user.getEmail(), user.getId());
+
+        return AuthResponse.builder()
+            .token(token)
+            .userId(user.getId())
+            .email(user.getEmail())
+            .firstName(user.getFirstName())
+            .lastName(user.getLastName())
+            .role(user.getRole().name())
+            .message("Login successful")
+            .build();
     }
 }
