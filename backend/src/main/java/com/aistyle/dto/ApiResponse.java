@@ -14,10 +14,10 @@ public class ApiResponse<T> {
     private String message;
     private T data;
     private String error;
-    private Integer statusCode;
-    private Long timestamp;
+    private int statusCode;
+    private long timestamp;
 
-    public ApiResponse(boolean success, String message, T data, Integer statusCode) {
+    public ApiResponse(boolean success, String message, T data, int statusCode) {
         this.success = success;
         this.message = message;
         this.data = data;

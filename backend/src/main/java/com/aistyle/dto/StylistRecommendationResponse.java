@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class StylistRecommendationResponse {
     private Long recommendationId;
-    private StyleAnalysisResponse styleAnalysis;
+    private Object styleAnalysis;
     private String outfitRecommendations;
     private String summaryReport;
     private Integer numberOfLlmCalls;

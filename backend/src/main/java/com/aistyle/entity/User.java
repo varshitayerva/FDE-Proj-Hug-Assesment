@@ -18,33 +18,23 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true)
     private String email;
 
-    @Column(nullable = false)
     private String password;
-
-    @Column(nullable = false)
     private String firstName;
-
-    @Column(nullable = false)
     private String lastName;
 
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @Column(nullable = false)
-    private Boolean isActive;
-
     private LocalDateTime createdAt;
-
     private LocalDateTime updatedAt;
 
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
-        isActive = true;
         role = Role.USER;
     }
 
@@ -53,7 +43,5 @@ public class User {
         updatedAt = LocalDateTime.now();
     }
 
-    public enum Role {
-        USER, ADMIN
-    }
+    public enum Role { USER, ADMIN }
 }

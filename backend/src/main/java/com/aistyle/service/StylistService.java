@@ -6,7 +6,6 @@ import com.aistyle.dto.UserProfileRequest;
 import com.aistyle.entity.Recommendation;
 import com.aistyle.entity.User;
 import com.aistyle.entity.UserProfile;
-import com.aistyle.exception.ResourceNotFoundException;
 import com.aistyle.repository.RecommendationRepository;
 import com.aistyle.repository.UserProfileRepository;
 import com.aistyle.repository.UserRepository;
@@ -21,9 +20,6 @@ import java.util.List;
 public class StylistService {
 
     @Autowired
-    private StylistWorkflow stylistWorkflow;
-
-    @Autowired
     private UserRepository userRepository;
 
     @Autowired
@@ -32,13 +28,14 @@ public class StylistService {
     @Autowired
     private RecommendationRepository recommendationRepository;
 
-    public StylistRecommendationResponse getStylistRecommendation(Long userId, UserProfileRequest profileRequest) {
-        User user = userRepository.findById(userId)
-            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+    @Autowired
+    private StylistWorkflow stylistWorkflow;
 
+    public StylistRecommendationResponse getStylistRecommendation(UserProfileRequest profileRequest) {
+        User user = getOrCreateDefaultUser();
         UserProfile profile = createOrUpdateUserProfile(user, profileRequest);
 
-        log.info("Starting AI stylist workflow for user: " + userId);
+        log.info("Starting AI stylist workflow for user: " + user.getId());
 
         StyleAnalysisResponse styleAnalysis = stylistWorkflow.analyzeStyle(profile);
         log.info("Style analysis completed. Score: " + styleAnalysis.getStyleMatchScore());
@@ -56,9 +53,9 @@ public class StylistService {
             .summaryReport(summaryReport)
             .styleMatchScore(styleAnalysis.getStyleMatchScore())
             .confidenceScore(styleAnalysis.getConfidenceScore())
-            .numberOfLlmCalls(3)
+            .numberOfLlmCalls(0)
             .isAdvancedRecommendation(styleAnalysis.getStyleMatchScore() >= 70)
-            .huggingFaceModelUsed("mistralai/Mistral-7B-Instruct-v0.3")
+            .huggingFaceModelUsed("mock-model")
             .build();
 
         Recommendation savedRecommendation = recommendationRepository.save(recommendation);
@@ -69,28 +66,32 @@ public class StylistService {
             .styleAnalysis(styleAnalysis)
             .outfitRecommendations(outfitRecommendations)
             .summaryReport(summaryReport)
-            .numberOfLlmCalls(3)
+            .numberOfLlmCalls(0)
             .isAdvancedRecommendation(styleAnalysis.getStyleMatchScore() >= 70)
             .message("Stylist recommendations generated successfully")
             .build();
     }
 
-    public List<Recommendation> getUserRecommendations(Long userId) {
-        userRepository.findById(userId)
-            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-
-        return recommendationRepository.findByUserIdOrderByCreatedAtDesc(userId);
+    public List<Recommendation> getUserRecommendations() {
+        User user = getOrCreateDefaultUser();
+        return recommendationRepository.findByUserIdOrderByCreatedAtDesc(user.getId());
     }
 
-    public Recommendation getRecommendationById(Long userId, Long recommendationId) {
-        Recommendation recommendation = recommendationRepository.findById(recommendationId)
-            .orElseThrow(() -> new ResourceNotFoundException("Recommendation not found"));
+    public Recommendation getRecommendationById(Long recommendationId) {
+        return recommendationRepository.findById(recommendationId).orElse(null);
+    }
 
-        if (!recommendation.getUser().getId().equals(userId)) {
-            throw new ResourceNotFoundException("Unauthorized access to recommendation");
-        }
-
-        return recommendation;
+    private User getOrCreateDefaultUser() {
+        return userRepository.findByEmail("default@aistyle.com")
+            .orElseGet(() -> {
+                User defaultUser = User.builder()
+                    .email("default@aistyle.com")
+                    .firstName("Default")
+                    .lastName("User")
+                    .password("")
+                    .build();
+                return userRepository.save(defaultUser);
+            });
     }
 
     private UserProfile createOrUpdateUserProfile(User user, UserProfileRequest request) {
@@ -98,18 +99,18 @@ public class StylistService {
             .orElse(new UserProfile());
 
         profile.setUser(user);
-        profile.setGender(request.getGender());
-        profile.setAgeGroup(request.getAgeGroup());
-        profile.setBodyType(request.getBodyType());
-        profile.setSkinTone(request.getSkinTone());
-        profile.setBudgetRange(request.getBudgetRange());
-        profile.setOccasionType(request.getOccasionType());
+        profile.setGender(UserProfile.Gender.valueOf(request.getGender()));
+        profile.setAgeGroup(UserProfile.AgeGroup.valueOf(request.getAgeGroup()));
+        profile.setBodyType(UserProfile.BodyType.valueOf(request.getBodyType()));
+        profile.setSkinTone(UserProfile.SkinTone.valueOf(request.getSkinTone()));
+        profile.setBudgetRange(UserProfile.BudgetRange.valueOf(request.getBudgetRange()));
+        profile.setOccasionType(UserProfile.OccasionType.valueOf(request.getOccasionType()));
         profile.setPreferredColors(request.getPreferredColors());
-        profile.setStylePreference(request.getStylePreference());
-        profile.setWeather(request.getWeather());
-        profile.setConfidenceLevel(request.getConfidenceLevel());
+        profile.setStylePreference(UserProfile.StylePreference.valueOf(request.getStylePreference()));
+        profile.setWeather(UserProfile.WeatherCondition.valueOf(request.getWeather()));
+        profile.setConfidenceLevel(UserProfile.ConfidenceLevel.valueOf(request.getConfidenceLevel()));
         profile.setFavoriteBrands(request.getFavoriteBrands());
-        profile.setFitPreference(request.getFitPreference());
+        profile.setFitPreference(UserProfile.FitPreference.valueOf(request.getFitPreference()));
         profile.setWardrobePreferences(request.getWardrobePreferences());
 
         return userProfileRepository.save(profile);

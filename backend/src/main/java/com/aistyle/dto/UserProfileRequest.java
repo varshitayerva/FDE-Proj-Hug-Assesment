@@ -1,50 +1,49 @@
 package com.aistyle.dto;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import com.aistyle.entity.UserProfile.*;
+import jakarta.validation.constraints.NotBlank;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class UserProfileRequest {
-    @NotNull(message = "Gender is required")
-    private Gender gender;
+    @NotBlank
+    private String gender;
 
-    @NotNull(message = "Age group is required")
-    private AgeGroup ageGroup;
+    @NotBlank
+    private String ageGroup;
 
-    @NotNull(message = "Body type is required")
-    private BodyType bodyType;
+    @NotBlank
+    private String bodyType;
 
-    @NotNull(message = "Skin tone is required")
-    private SkinTone skinTone;
+    @NotBlank
+    private String skinTone;
 
-    @NotNull(message = "Budget range is required")
-    private BudgetRange budgetRange;
+    @NotBlank
+    private String budgetRange;
 
-    @NotNull(message = "Occasion type is required")
-    private OccasionType occasionType;
+    @NotBlank
+    private String occasionType;
 
     private String preferredColors;
 
-    @NotNull(message = "Style preference is required")
-    private StylePreference stylePreference;
+    @NotBlank
+    private String stylePreference;
 
-    @NotNull(message = "Weather condition is required")
-    private WeatherCondition weather;
+    @NotBlank
+    private String weather;
 
-    @NotNull(message = "Confidence level is required")
-    private ConfidenceLevel confidenceLevel;
+    @NotBlank
+    private String confidenceLevel;
 
     private String favoriteBrands;
 
-    @NotNull(message = "Fit preference is required")
-    private FitPreference fitPreference;
+    @NotBlank
+    private String fitPreference;
 
     private String wardrobePreferences;
 }

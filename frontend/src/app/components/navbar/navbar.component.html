@@ -1,24 +1,13 @@
 <nav class="navbar">
   <div class="navbar-container">
     <div class="navbar-brand">
-      <a routerLink="/dashboard" class="logo">👗 AI-Stylist</a>
+      <a routerLink="/stylist" class="logo">👗 AI-Stylist</a>
     </div>
-    <div class="navbar-menu" *ngIf="isAuthenticated">
+    <div class="navbar-menu">
       <ul class="navbar-nav">
-        <li><a routerLink="/dashboard" routerLinkActive="active">Dashboard</a></li>
         <li><a routerLink="/stylist" routerLinkActive="active">Get Styled</a></li>
         <li><a routerLink="/recommendations" routerLinkActive="active">My Recommendations</a></li>
       </ul>
-    </div>
-    <div class="navbar-user">
-      <span *ngIf="isAuthenticated" class="user-info">
-        {{ currentUser?.firstName }} {{ currentUser?.lastName }}
-      </span>
-      <button *ngIf="isAuthenticated" class="logout-btn" (click)="logout()">Logout</button>
-      <div *ngIf="!isAuthenticated" class="auth-links">
-        <a routerLink="/login">Login</a>
-        <a routerLink="/signup">Signup</a>
-      </div>
     </div>
   </div>
 </nav>

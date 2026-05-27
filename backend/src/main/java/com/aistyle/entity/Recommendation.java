@@ -22,33 +22,32 @@ public class Recommendation {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(columnDefinition = "LONGTEXT")
+    @Column(columnDefinition = "TEXT")
     private String styleAnalysis;
 
-    @Column(columnDefinition = "LONGTEXT")
+    @Column(columnDefinition = "TEXT")
     private String outfitRecommendations;
 
-    @Column(columnDefinition = "LONGTEXT")
+    @Column(columnDefinition = "TEXT")
     private String summaryReport;
 
-    private Integer styleMatchScore;
-
-    private Integer confidenceScore;
-
-    @Column(columnDefinition = "LONGTEXT")
-    private String usedPrompt;
-
-    @Column(columnDefinition = "LONGTEXT")
+    private Double styleMatchScore;
+    private Double confidenceScore;
+    private Integer numberOfLlmCalls;
+    private Boolean isAdvancedRecommendation;
     private String huggingFaceModelUsed;
 
-    private Integer numberOfLlmCalls;
-
-    private Boolean isAdvancedRecommendation;
-
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
     }
 }
