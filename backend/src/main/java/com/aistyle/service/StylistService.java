@@ -3,6 +3,7 @@ package com.aistyle.service;
 import com.aistyle.dto.StyleAnalysisResponse;
 import com.aistyle.dto.StylistRecommendationResponse;
 import com.aistyle.dto.UserProfileRequest;
+import com.aistyle.dto.OutfitRecommendation;
 import com.aistyle.entity.Recommendation;
 import com.aistyle.entity.User;
 import com.aistyle.entity.UserProfile;
@@ -40,22 +41,23 @@ public class StylistService {
         StyleAnalysisResponse styleAnalysis = stylistWorkflow.analyzeStyle(profile);
         log.info("Style analysis completed. Score: " + styleAnalysis.getStyleMatchScore());
 
-        String outfitRecommendations = stylistWorkflow.generateOutfitRecommendations(profile, styleAnalysis);
-        log.info("Outfit recommendations generated");
+        String outfitRecommendationsText = stylistWorkflow.generateOutfitRecommendations(profile, styleAnalysis);
+        List<OutfitRecommendation> outfitRecommendations = stylistWorkflow.parseOutfitRecommendations(outfitRecommendationsText);
+        log.info("Outfit recommendations generated: {} outfits", outfitRecommendations.size());
 
-        String summaryReport = stylistWorkflow.generateSummaryReport(profile, styleAnalysis, outfitRecommendations);
+        String summaryReport = stylistWorkflow.generateSummaryReport(profile, styleAnalysis, outfitRecommendationsText);
         log.info("Summary report generated");
 
         Recommendation recommendation = Recommendation.builder()
             .user(user)
             .styleAnalysis(styleAnalysis.toString())
-            .outfitRecommendations(outfitRecommendations)
+            .outfitRecommendations(outfitRecommendationsText)
             .summaryReport(summaryReport)
             .styleMatchScore(styleAnalysis.getStyleMatchScore())
             .confidenceScore(styleAnalysis.getConfidenceScore())
-            .numberOfLlmCalls(0)
+            .numberOfLlmCalls(3)
             .isAdvancedRecommendation(styleAnalysis.getStyleMatchScore() >= 70)
-            .huggingFaceModelUsed("mock-model")
+            .huggingFaceModelUsed("deepseek-ai/DeepSeek-V4-Flash:novita")
             .build();
 
         Recommendation savedRecommendation = recommendationRepository.save(recommendation);
@@ -66,7 +68,7 @@ public class StylistService {
             .styleAnalysis(styleAnalysis)
             .outfitRecommendations(outfitRecommendations)
             .summaryReport(summaryReport)
-            .numberOfLlmCalls(0)
+            .numberOfLlmCalls(3)
             .isAdvancedRecommendation(styleAnalysis.getStyleMatchScore() >= 70)
             .message("Stylist recommendations generated successfully")
             .build();

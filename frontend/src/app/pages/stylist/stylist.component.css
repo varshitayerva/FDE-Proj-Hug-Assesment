@@ -8,18 +8,24 @@
   margin-bottom: 2rem;
   padding: 2rem;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  color: #ffffff;
   border-radius: 8px;
 }
 
 .stylist-header h1 {
   margin: 0 0 0.5rem 0;
   font-size: 2rem;
+  color: #ffffff;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .stylist-header p {
   margin: 0;
-  opacity: 0.9;
+  opacity: 1;
+  color: #f0f0f0;
+  font-size: 1rem;
+  font-weight: 500;
 }
 
 .error-message {
@@ -225,15 +231,30 @@ textarea.form-control {
   font-size: 0.9rem;
 }
 
-.recommendations-text,
-.summary-text {
-  background: #f8f9fa;
-  padding: 1.5rem;
-  border-radius: 4px;
-  line-height: 1.6;
-  color: #555;
-  white-space: pre-wrap;
+.recommendations-text {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding: 2rem;
+  border-radius: 8px;
+  line-height: 1.8;
+  color: #2c3e50;
   word-wrap: break-word;
+  border-left: 4px solid #667eea;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  display: -webkit-box;
+  -webkit-line-clamp: 7;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.summary-text {
+  background: linear-gradient(135deg, #f9f5ff 0%, #f0e6ff 100%);
+  padding: 2rem;
+  border-radius: 8px;
+  line-height: 1.8;
+  color: #2c3e50;
+  word-wrap: break-word;
+  border-left: 4px solid #764ba2;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .info-footer {
@@ -249,6 +270,185 @@ textarea.form-control {
   color: #2c3e50;
 }
 
+.outfits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.outfit-card {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.outfit-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.outfit-card.expanded {
+  grid-column: 1 / -1;
+  transform: none;
+}
+
+.outfit-card {
+  cursor: pointer;
+}
+
+.outfit-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid rgba(102, 126, 234, 0.2);
+  padding-bottom: 0.5rem;
+}
+
+.outfit-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex: 1;
+}
+
+.expand-icon {
+  color: #667eea;
+  font-weight: bold;
+  margin-left: 1rem;
+  transition: transform 0.3s;
+}
+
+.outfit-header h4 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 1.1rem;
+}
+
+.occasion-badge {
+  background: #667eea;
+  color: white;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.outfit-description {
+  color: #555;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0 0 1rem 0;
+  font-style: italic;
+}
+
+.pieces-container {
+  margin-bottom: 1rem;
+}
+
+.pieces-container h5 {
+  color: #2c3e50;
+  margin: 0 0 0.5rem 0;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.pieces-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.piece {
+  background: white;
+  padding: 0.8rem;
+  border-radius: 4px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 2fr 1fr;
+  gap: 0.5rem;
+  align-items: center;
+  font-size: 0.85rem;
+  border-left: 3px solid #667eea;
+  cursor: help;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.piece:hover {
+  background: #f0f4ff;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+  border-left-color: #764ba2;
+}
+
+.piece-description-short {
+  color: #666;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.piece-description-full {
+  color: #333;
+  font-weight: 500;
+}
+
+.piece.expanded {
+  grid-template-columns: 0.8fr 0.8fr 3fr 1fr;
+}
+
+.piece-category {
+  font-weight: 600;
+  color: #667eea;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+}
+
+.piece-brand {
+  color: #764ba2;
+  font-weight: 600;
+}
+
+.piece-description {
+  color: #555;
+  word-wrap: break-word;
+}
+
+.piece-cost {
+  color: #27ae60;
+  font-weight: 600;
+  text-align: right;
+}
+
+.total-cost {
+  background: rgba(39, 174, 96, 0.1);
+  padding: 0.8rem;
+  border-radius: 4px;
+  color: #27ae60;
+  font-weight: 600;
+  border-left: 3px solid #27ae60;
+}
+
+.no-outfits {
+  text-align: center;
+  padding: 2rem;
+  color: #999;
+  background: #f8f9fa;
+  border-radius: 4px;
+}
+
+.read-more-hint {
+  text-align: center;
+  color: #999;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+  font-style: italic;
+}
+
 @media (max-width: 768px) {
   .form-row {
     grid-template-columns: 1fr;
@@ -256,6 +456,20 @@ textarea.form-control {
 
   .analysis-grid {
     grid-template-columns: 1fr;
+  }
+
+  .outfits-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .piece {
+    grid-template-columns: 1fr;
+  }
+
+  .outfit-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
   }
 
   .stylist-header h1 {

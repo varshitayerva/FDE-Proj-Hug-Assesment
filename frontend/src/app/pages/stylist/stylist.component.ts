@@ -18,6 +18,7 @@ export class StylistComponent implements OnInit {
   error = '';
   success = false;
   recommendation: StylistRecommendationResponse | null = null;
+  expandedOutfitIndex: number | null = null;
 
   genderOptions = ['MALE', 'FEMALE', 'NON_BINARY', 'PREFER_NOT_TO_SAY'];
   ageGroupOptions = ['TEENS', 'TWENTIES', 'THIRTIES', 'FORTIES', 'FIFTIES_PLUS'];
@@ -90,5 +91,17 @@ export class StylistComponent implements OnInit {
       .split(' ')
       .map(word => word.charAt(0).toUpperCase() + word.slice(1))
       .join(' ');
+  }
+
+  isSummaryTruncated(): boolean {
+    if (!this.recommendation || !this.recommendation.summaryReport) {
+      return false;
+    }
+    const lineCount = (this.recommendation.summaryReport.match(/\n/g) || []).length + 1;
+    return lineCount > 7;
+  }
+
+  toggleOutfitExpand(index: number): void {
+    this.expandedOutfitIndex = this.expandedOutfitIndex === index ? null : index;
   }
 }

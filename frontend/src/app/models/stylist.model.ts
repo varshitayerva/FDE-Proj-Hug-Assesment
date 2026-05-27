@@ -23,10 +23,25 @@ export interface StyleAnalysisResponse {
   recommendedCategories: string[];
 }
 
+export interface OutfitPiece {
+  category: string;
+  brand: string;
+  description: string;
+  cost: string;
+}
+
+export interface OutfitRecommendation {
+  outfitName: string;
+  occasion: string;
+  pieces: OutfitPiece[];
+  totalEstimatedCost: string;
+  description: string;
+}
+
 export interface StylistRecommendationResponse {
   recommendationId: number;
   styleAnalysis: StyleAnalysisResponse;
-  outfitRecommendations: string;
+  outfitRecommendations: OutfitRecommendation[];
   summaryReport: string;
   numberOfLlmCalls: number;
   isAdvancedRecommendation: boolean;

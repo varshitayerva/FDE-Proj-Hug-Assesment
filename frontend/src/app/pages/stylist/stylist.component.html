@@ -205,11 +205,43 @@
 
     <div class="recommendations-section">
       <h3>Outfit Recommendations</h3>
-      <div class="recommendations-text">{{ recommendation.outfitRecommendations }}</div>
+      <div *ngIf="recommendation.outfitRecommendations && recommendation.outfitRecommendations.length > 0" class="outfits-grid">
+        <div *ngFor="let outfit of recommendation.outfitRecommendations; let i = index" class="outfit-card" [class.expanded]="expandedOutfitIndex === i" (click)="toggleOutfitExpand(i)">
+          <div class="outfit-header">
+            <div class="outfit-title">
+              <h4>{{ outfit.outfitName }}</h4>
+              <span class="occasion-badge">{{ outfit.occasion }}</span>
+            </div>
+            <span class="expand-icon">{{ expandedOutfitIndex === i ? '▼' : '▶' }}</span>
+          </div>
+
+          <p *ngIf="outfit.description" class="outfit-description">{{ outfit.description }}</p>
+
+          <div class="pieces-container" [class.expanded]="expandedOutfitIndex === i">
+            <h5>Clothing Pieces</h5>
+            <div class="pieces-list">
+              <div *ngFor="let piece of outfit.pieces" class="piece" [class.expanded]="expandedOutfitIndex === i" [title]="piece.brand + ' - ' + piece.description">
+                <span class="piece-category">{{ piece.category }}</span>
+                <span class="piece-brand">{{ piece.brand }}</span>
+                <span *ngIf="expandedOutfitIndex === i" class="piece-description-full">{{ piece.description }}</span>
+                <span *ngIf="expandedOutfitIndex !== i" class="piece-description-short">{{ piece.description | slice:0:25 }}{{ piece.description.length > 25 ? '...' : '' }}</span>
+                <span class="piece-cost">{{ piece.cost }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="total-cost">
+            <strong>Total Estimated Cost:</strong> {{ outfit.totalEstimatedCost }}
+          </div>
+        </div>
+      </div>
+      <div *ngIf="!recommendation.outfitRecommendations || recommendation.outfitRecommendations.length === 0" class="no-outfits">
+        <p>No outfit recommendations available</p>
+      </div>
     </div>
 
     <div *ngIf="recommendation.summaryReport" class="summary-section">
-      <h3>Summary Report</h3>
+      <h3>Your Styling Summary</h3>
       <div class="summary-text">{{ recommendation.summaryReport }}</div>
     </div>
 

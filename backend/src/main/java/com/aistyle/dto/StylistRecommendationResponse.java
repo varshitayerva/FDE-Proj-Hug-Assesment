@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -11,8 +12,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class StylistRecommendationResponse {
     private Long recommendationId;
-    private Object styleAnalysis;
-    private String outfitRecommendations;
+    private StyleAnalysisResponse styleAnalysis;
+    private List<OutfitRecommendation> outfitRecommendations;
     private String summaryReport;
     private Integer numberOfLlmCalls;
     private Boolean isAdvancedRecommendation;
