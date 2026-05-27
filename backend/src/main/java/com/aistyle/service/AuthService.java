@@ -1,17 +1,12 @@
 package com.aistyle.service;
 
-import com.aistyle.dto.AuthRequest;
 import com.aistyle.dto.SignupRequest;
 import com.aistyle.dto.AuthResponse;
 import com.aistyle.entity.User;
 import com.aistyle.exception.BadRequestException;
-import com.aistyle.exception.ResourceNotFoundException;
 import com.aistyle.repository.UserRepository;
 import com.aistyle.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,9 +21,6 @@ public class AuthService {
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
 
     public AuthResponse signup(SignupRequest request) {
         if (!request.getPassword().equals(request.getConfirmPassword())) {
@@ -58,27 +50,6 @@ public class AuthService {
             .lastName(savedUser.getLastName())
             .role(savedUser.getRole().name())
             .message("User registered successfully")
-            .build();
-    }
-
-    public AuthResponse login(AuthRequest request) {
-        User user = userRepository.findByEmail(request.getEmail())
-            .orElseThrow(() -> new BadRequestException("Invalid email or password"));
-
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new BadRequestException("Invalid email or password");
-        }
-
-        String token = jwtTokenProvider.generateTokenFromEmail(user.getEmail(), user.getId());
-
-        return AuthResponse.builder()
-            .token(token)
-            .userId(user.getId())
-            .email(user.getEmail())
-            .firstName(user.getFirstName())
-            .lastName(user.getLastName())
-            .role(user.getRole().name())
-            .message("Login successful")
             .build();
     }
 }

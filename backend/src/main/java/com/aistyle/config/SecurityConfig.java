@@ -5,7 +5,6 @@ import com.aistyle.security.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -61,17 +60,8 @@ public class SecurityConfig {
             .sessionManagement(sessionManagement -> sessionManagement
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(authz -> authz
-                .requestMatchers(HttpMethod.POST, "/api/auth/signup").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
-                .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/api/health").permitAll()
-                .requestMatchers("/api/public/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/admin/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.POST, "/api/admin/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/admin/**").hasRole("ADMIN")
-                .requestMatchers("/api/user/**").authenticated()
-                .requestMatchers("/api/stylist/**").authenticated()
-                .anyRequest().authenticated())
+                .requestMatchers("/api/**").permitAll()
+                .anyRequest().permitAll())
             .authenticationProvider(authProvider)
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 

@@ -1,7 +1,6 @@
 package com.aistyle.controller;
 
 import com.aistyle.dto.ApiResponse;
-import com.aistyle.dto.AuthRequest;
 import com.aistyle.dto.AuthResponse;
 import com.aistyle.dto.SignupRequest;
 import com.aistyle.service.AuthService;
@@ -24,12 +23,6 @@ public class AuthController {
         AuthResponse response = authService.signup(request);
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(new ApiResponse<>(true, "User registered successfully", response, 201));
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<ApiResponse<AuthResponse>> login(@Valid @RequestBody AuthRequest request) {
-        AuthResponse response = authService.login(request);
-        return ResponseEntity.ok(new ApiResponse<>(true, "Login successful", response, 200));
     }
 
     @GetMapping("/health")
