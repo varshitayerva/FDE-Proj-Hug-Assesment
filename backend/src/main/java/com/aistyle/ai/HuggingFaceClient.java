@@ -96,15 +96,14 @@ public class HuggingFaceClient {
     }
 
     private String callModelEndpoint(String model, String prompt) {
-        String url = apiUrl.replaceAll("/$", "") + "/chat/completions";
+        String url = apiUrl + model;
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("Authorization", "Bearer " + apiToken);
 
         String payload = String.format(
-            "{\"model\": \"%s\", \"messages\": [{\"role\": \"user\", \"content\": \"%s\"}], \"max_tokens\": 500}",
-            model,
+            "{\"inputs\": \"%s\", \"parameters\": {\"max_length\": 500}}",
             escapeJson(prompt)
         );
 
@@ -123,12 +122,20 @@ public class HuggingFaceClient {
     private String extractResponseText(String responseBody) {
         try {
             var node = objectMapper.readTree(responseBody);
-            if (node.has("choices") && node.get("choices").isArray() && node.get("choices").size() > 0) {
-                var firstChoice = node.get("choices").get(0);
-                if (firstChoice.has("message") && firstChoice.get("message").has("content")) {
-                    return firstChoice.get("message").get("content").asText();
+
+            // Handle array response from HuggingFace Inference API
+            if (node.isArray() && node.size() > 0) {
+                var firstItem = node.get(0);
+                if (firstItem.has("generated_text")) {
+                    return firstItem.get("generated_text").asText();
                 }
             }
+
+            // Handle object response
+            if (node.has("generated_text")) {
+                return node.get("generated_text").asText();
+            }
+
             return responseBody;
         } catch (Exception e) {
             log.warn("Failed to parse response: {}", e.getMessage());
