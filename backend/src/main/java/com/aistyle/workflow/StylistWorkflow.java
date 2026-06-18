@@ -2,12 +2,15 @@ package com.aistyle.workflow;
 
 import com.aistyle.ai.HuggingFaceClient;
 import com.aistyle.dto.StyleAnalysisResponse;
+import com.aistyle.dto.OutfitRecommendation;
 import com.aistyle.entity.UserProfile;
 import com.aistyle.tracing.TokenCounter;
 import com.aistyle.tracing.TraceRecorder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import java.util.List;
+import java.util.ArrayList;
 
 @Slf4j
 @Component
@@ -208,5 +211,102 @@ public class StylistWorkflow {
             log.warn("Could not extract score from response", e);
         }
         return (min + max) / 2.0;
+    }
+
+    public List<OutfitRecommendation> parseOutfitRecommendations(String outfitText) {
+        List<OutfitRecommendation> outfits = new ArrayList<>();
+
+        String[] outfitSections = outfitText.split("(?i)outfit\\s+\\d+:");
+
+        for (int i = 1; i < outfitSections.length && i <= 4; i++) {
+            String section = outfitSections[i].trim();
+            if (section.isEmpty() || section.length() < 20) continue;
+
+            OutfitRecommendation outfit = parseStructuredOutfitSection(section, i);
+            if (outfit != null) {
+                outfits.add(outfit);
+            }
+        }
+
+        if (outfits.isEmpty()) {
+            log.warn("Failed to parse outfits, using defaults");
+            return createDefaultOutfits();
+        }
+        return outfits;
+    }
+
+    private OutfitRecommendation parseStructuredOutfitSection(String section, int outfitNumber) {
+        try {
+            String[] lines = section.split("\n");
+            String description = lines.length > 0 ? lines[0].trim() : "Outfit " + outfitNumber;
+            String occasion = extractField(section, "Occasion", "Casual");
+            String priceRange = extractField(section, "Price", "Medium");
+            double confidenceScore = extractNumericField(section, "confidence", 75.0);
+
+            return OutfitRecommendation.builder()
+                .outfitNumber(outfitNumber)
+                .description(description)
+                .occasion(occasion)
+                .priceRange(priceRange)
+                .confidenceScore(confidenceScore)
+                .build();
+        } catch (Exception e) {
+            log.warn("Failed to parse outfit section: {}", e.getMessage());
+            return null;
+        }
+    }
+
+    private String extractField(String text, String fieldName, String defaultValue) {
+        try {
+            String pattern = "(?i)" + fieldName + "\\s*[:=]\\s*(.+?)(?:[\\n,]|$)";
+            java.util.regex.Pattern p = java.util.regex.Pattern.compile(pattern);
+            java.util.regex.Matcher m = p.matcher(text);
+            if (m.find()) {
+                return m.group(1).trim();
+            }
+        } catch (Exception e) {
+            log.debug("Could not extract field: {}", fieldName);
+        }
+        return defaultValue;
+    }
+
+    private double extractNumericField(String text, String fieldName, double defaultValue) {
+        try {
+            String pattern = "(?i)" + fieldName + "\\s*[:=]\\s*([\\d.]+)";
+            java.util.regex.Pattern p = java.util.regex.Pattern.compile(pattern);
+            java.util.regex.Matcher m = p.matcher(text);
+            if (m.find()) {
+                return Double.parseDouble(m.group(1));
+            }
+        } catch (Exception e) {
+            log.debug("Could not extract numeric field: {}", fieldName);
+        }
+        return defaultValue;
+    }
+
+    private List<OutfitRecommendation> createDefaultOutfits() {
+        List<OutfitRecommendation> outfits = new ArrayList<>();
+        outfits.add(OutfitRecommendation.builder()
+            .outfitNumber(1)
+            .description("Classic Business Casual")
+            .occasion("Professional")
+            .priceRange("Medium")
+            .confidenceScore(70.0)
+            .build());
+        outfits.add(OutfitRecommendation.builder()
+            .outfitNumber(2)
+            .description("Casual Weekend Look")
+            .occasion("Casual")
+            .priceRange("Budget-Friendly")
+            .confidenceScore(70.0)
+            .build());
+        outfits.add(OutfitRecommendation.builder()
+            .outfitNumber(3)
+            .description("Evening Elegant")
+            .occasion("Formal")
+            .priceRange("Premium")
+            .confidenceScore(70.0)
+            .build());
+        return outfits;
     }
 }
