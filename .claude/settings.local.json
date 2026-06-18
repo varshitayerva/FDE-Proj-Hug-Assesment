@@ -5,7 +5,11 @@
       "Bash(git config *)",
       "Bash(git add *)",
       "Bash(git commit -m 'PHASE 2: Complete Spring Boot backend implementation *)",
-      "Bash(git commit -m 'PHASE 3: Complete Angular frontend implementation *)"
+      "Bash(git commit -m 'PHASE 3: Complete Angular frontend implementation *)",
+      "Bash(mvn clean *)",
+      "Bash(git show *)",
+      "Read(//tmp/**)",
+      "Bash(git checkout *)"
     ]
   }
 }

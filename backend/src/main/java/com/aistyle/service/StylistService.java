@@ -57,7 +57,7 @@ public class StylistService {
             .confidenceScore(styleAnalysis.getConfidenceScore())
             .numberOfLlmCalls(3)
             .isAdvancedRecommendation(styleAnalysis.getStyleMatchScore() >= 70)
-            .huggingFaceModelUsed("deepseek-ai/DeepSeek-V4-Flash:novita")
+            .huggingFaceModelUsed("deepseek-ai/DeepSeek-V4-Flash")
             .build();
 
         Recommendation savedRecommendation = recommendationRepository.save(recommendation);
